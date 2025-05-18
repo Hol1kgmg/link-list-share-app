@@ -17,6 +17,17 @@ export interface UrlListProps {
   onDelete: (id: string) => void;
 }
 
+export interface MarkdownDisplayProps {
+  isEmpty: boolean;
+  urls: OutputUrlData[];
+  onDelete: (id: string) => void;
+}
+
+export interface MarkdownPreviewProps {
+  markdownText: string;
+  isEmpty: boolean;
+}
+
 export type UrlFormProps = {
   onSubmit: (data: InputUrlData) => void;  // フォームの入力はInputUrlData
 }; 

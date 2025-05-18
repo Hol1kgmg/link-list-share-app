@@ -62,12 +62,14 @@ export const UrlList = ({ urls, onReset, onDelete }: UrlListProps) => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <MarkdownDisplay
-          markdownText={markdownText}
           isEmpty={urls.length === 0}
           urls={urls}
           onDelete={onDelete}
         />
-        <MarkdownPreview markdownText={markdownText} isEmpty={urls.length === 0} />
+        <MarkdownPreview
+          markdownText={markdownText}
+          isEmpty={urls.length === 0}
+        />
       </div>
     </div>
   );
