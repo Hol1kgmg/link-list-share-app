@@ -63,17 +63,26 @@ npm run dev
 2. 新しいプロジェクトを作成：
    - GitHubリポジトリを連携
    - `link-list-share-app`リポジトリを選択
-   - フレームワークプリセットは`Next.js`を選択
 
-3. 環境設定：
-   - Root Directory: `frontend`
-   - Build Command: `npm run build`
+3. Build and Development Settings:
+   - Framework Preset: `Next.js`
+   - Build Command: `next build`
    - Output Directory: `.next`
    - Install Command: `npm install`
+   - Development Command: `next dev`
+   - Root Directory: `frontend`
 
-4. "Deploy"ボタンをクリックしてデプロイを開始
+4. Environment Variables:
+   - `NODE_ENV`: `production`
+
+5. "Deploy"ボタンをクリックしてデプロイを開始
 
 デプロイが完了すると、Vercelによって生成されたURLでアプリケーションにアクセスできます。
+
+### 自動デプロイ
+
+- mainブランチにプッシュすると、自動的にデプロイが実行されます
+- プルリクエストを作成すると、プレビューデプロイが自動的に作成されます
 
 ## 開発環境
 
