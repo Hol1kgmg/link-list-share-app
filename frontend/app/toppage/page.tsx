@@ -54,7 +54,7 @@ export default function TopPage() {
             onDelete={handleDelete}
           />
         </main>
-      </div>
+        </div>
     </div>
   );
 } 
