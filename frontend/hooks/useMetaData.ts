@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error
 import { useQuery } from '@tanstack/react-query';
 import { OutputUrlData } from '@/lib/types';
 

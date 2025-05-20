@@ -1,8 +1,6 @@
 import { NextRequest } from 'next/server';
-// @ts-ignore
+// @ts-expect-error cheerioの型定義がないため
 import * as cheerio from 'cheerio';
-
-// @ts-ignore
 export const runtime = 'edge';
 
 // キャッシュの設定
@@ -44,6 +42,7 @@ export async function GET(request: NextRequest) {
       }
     );
   } catch (error) {
+    console.error('Error fetching meta title:', error);
     return new Response(JSON.stringify({ error: 'Failed to fetch meta title' }), { status: 500 });
   }
 } 
