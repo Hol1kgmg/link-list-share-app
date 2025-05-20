@@ -9,7 +9,20 @@ export const MarkdownPreview = ({ markdownText, isEmpty }: MarkdownPreviewProps)
   const previewContent = isEmpty ? (
     <p className="text-gray-500 dark:text-gray-400">登録されたURLはありません</p>
   ) : (
-    <ReactMarkdown>{markdownText}</ReactMarkdown>
+    <ReactMarkdown
+      components={{
+        a: ({ node, ...props }) => (
+          <a
+            {...props}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+          />
+        ),
+      }}
+    >
+      {markdownText}
+    </ReactMarkdown>
   );
 
   return (

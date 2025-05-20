@@ -7,7 +7,7 @@ export const UrlList = ({ urls, onReset, onDelete }: UrlListProps) => {
   const [copySuccess, setCopySuccess] = useState(false);
 
   const formatUrlToMarkdown = (url: OutputUrlData) => {
-    return `- [${url.url}](${url.url})`;
+    return `[${url.url}](${url.url})`;
   };
 
   const markdownText = urls.map(formatUrlToMarkdown).join('\n');
