@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server';
-// @ts-expect-error cheerioの型定義がないため
 import * as cheerio from 'cheerio';
 export const runtime = 'edge';
 
