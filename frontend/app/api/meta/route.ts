@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { parse } from 'node-html-parser';
 import * as cheerio from 'cheerio';
 export const runtime = 'edge';
 
@@ -6,7 +7,6 @@ export const runtime = 'edge';
 export const revalidate = 3600; // 1時間キャッシュ
 
 export async function GET(request: NextRequest) {
-  console.log('GET request received::::');
   const urlParam = request.nextUrl.searchParams.get('url');
 
   if (!urlParam) {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const response = await fetch(urlParam, {
-      headers: { 'User-Agent': 'Googlebot' },
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36' },
     });
     const html = await response.text();
 
@@ -41,7 +41,6 @@ export async function GET(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.error('Error fetching meta title:', error);
     return new Response(JSON.stringify({ error: 'Failed to fetch meta title' }), { status: 500 });
   }
 } 
