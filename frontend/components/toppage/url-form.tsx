@@ -6,7 +6,7 @@ export const UrlForm = ({ onSubmit }: UrlFormProps) => {
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
   const [isGetRequest, setIsGetRequest] = useState(false); // 
-  const { data, refetch } = useMetaData(isGetRequest ? url : ''); // URLが空の場合はリクエストしない
+  const { refetch } = useMetaData(isGetRequest ? url : ''); // URLが空の場合はリクエストしない
 
   const validateUrl = (url: string): boolean => {
     try {
