@@ -29,6 +29,6 @@ export interface MarkdownPreviewProps {
 }
 
 export type UrlFormProps = {
-  onSubmit: (data: InputUrlData) => void;  // フォームの入力はInputUrlData
+  onSubmit: (data: InputUrlData, title: string | null) => void;  // フォームの入力はInputUrlData
 }; 
 

@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { type UrlFormProps } from '@/lib/types';
+import useMetaData from '@/hooks/useGetMetaData';
 
 export const UrlForm = ({ onSubmit }: UrlFormProps) => {
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
+  const [isGetRequest, setIsGetRequest] = useState(false); // 
+  const { data, refetch } = useMetaData(isGetRequest ? url : ''); // URLが空の場合はリクエストしない
 
   const validateUrl = (url: string): boolean => {
     try {
@@ -18,27 +21,39 @@ export const UrlForm = ({ onSubmit }: UrlFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const trimmedUrl = url.trim();
-    if (trimmedUrl && validateUrl(trimmedUrl)) {
-      onSubmit({ url: trimmedUrl });
-      setUrl('');
-    }
+    setIsGetRequest(true);
   };
+
 
   const handlePaste = async () => {
     try {
       setError('');
       const text = await navigator.clipboard.readText();
-      const trimmedText = text.trim();
-      if (trimmedText && validateUrl(trimmedText)) {
-        onSubmit({ url: trimmedText });
-        setUrl('');
-      }
+      setUrl(text);
+      setIsGetRequest(true);
     } catch (err) {
       console.error('クリップボードからの読み取りに失敗しました:', err);
       setError('クリップボードからの読み取りに失敗しました');
     }
   };
+
+  useEffect(() => {
+    if (!isGetRequest) return;
+
+    const fetchMeta = async () => {
+      // jsonデータを受け取ってからrefetchより下の処理を実行
+      const { data: fetchedData } = await refetch();
+
+      const trimmedUrl = url.trim();
+      if (trimmedUrl && validateUrl(trimmedUrl)) {
+        onSubmit({ url: trimmedUrl }, fetchedData?.title || null);
+        setUrl('');
+      }
+      setIsGetRequest(false);
+    };
+
+    fetchMeta();
+  }, [url, isGetRequest]);
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-2xl">
@@ -115,4 +130,4 @@ const ClipboardIcon = () => (
     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
   </svg>
-); 
+);
