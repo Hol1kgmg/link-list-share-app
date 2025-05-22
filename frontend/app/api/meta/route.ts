@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server';
-import { parse } from 'node-html-parser';
 import * as cheerio from 'cheerio';
 export const runtime = 'edge';
 
