@@ -31,6 +31,10 @@ export const UrlForm = ({ onSubmit }: UrlFormProps) => {
     try {
       setErrorMessage('');
       const text = await navigator.clipboard.readText();
+      if (!validateUrl(text)) {
+        // validateUrl内でエラーメッセージがセットされる
+        return;
+      }
       setUrl(text);
       setIsGetRequest(true);
     } catch (err) {
@@ -107,22 +111,21 @@ export const UrlForm = ({ onSubmit }: UrlFormProps) => {
             追加
           </button>
         </div>
-        <div className="min-h-[28px] flex items-center gap-2 text-blue-500 text-sm">
+        <div className="min-h-[28px] flex items-center gap-2 text-sm">
           {showLoading ? (
             <>
               <SpinnerIcon />
-              HTMLのメタデータ取得中...
+              <span className="text-blue-500">HTMLのメタデータ取得中...</span>
             </>
+          ) : error || errorMessage ? (
+            <span className="text-red-500">
+              {error ? 'メタデータの取得に失敗しました' : errorMessage}
+            </span>
           ) : (
             // 空の要素で高さを維持
             <span>&nbsp;</span>
           )}
         </div>
-        {(error || errorMessage) && (
-          <p className="text-red-500 text-sm">
-            {error ? 'メタデータの取得に失敗しました' : errorMessage}
-          </p>
-        )}
       </div>
     </form>
   );
