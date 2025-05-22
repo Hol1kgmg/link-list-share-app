@@ -48,6 +48,7 @@ export async function GET(request: NextRequest) {
       }
     );
   } catch (error) {
+    console.error(error);
     return new Response(JSON.stringify({ error: 'Failed to fetch meta title' }), { status: 500 });
   }
 }
