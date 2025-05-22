@@ -9,11 +9,12 @@ import { UrlList } from '@/components/toppage/url-list';
 export default function TopPage() {
   const [urls, setUrls] = useState<OutputUrlData[]>([]);
 
-  const handleSubmit = (data: InputUrlData) => {
+  const handleSubmit = (data: InputUrlData, title:string | null) => {
+    console.log('URL submitted:', data);
     const newUrl: OutputUrlData = {
       id: crypto.randomUUID(),
       url: data.url,
-      title: null, // 将来的にメタデータから取得予定
+      title: (title === null) ? data.url : title,
     };
     setUrls([...urls, newUrl]);
   };
@@ -54,7 +55,7 @@ export default function TopPage() {
             onDelete={handleDelete}
           />
         </main>
-      </div>
+        </div>
     </div>
   );
 } 

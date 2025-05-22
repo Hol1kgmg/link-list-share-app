@@ -16,7 +16,7 @@ export const MarkdownDisplay = ({ isEmpty, urls, onDelete }: MarkdownDisplayProp
             {urls.map((url) => (
               <div key={url.id} className="flex items-center gap-2 group relative pr-8">
                 <pre className="whitespace-pre-wrap break-all font-mono text-sm text-gray-700 dark:text-gray-300 flex-1">
-                  {`- [${url.url}](${url.url})`}
+                  {`[${url.url}](${url.url})`}
                 </pre>
                 <button
                   onClick={() => onDelete(url.id)}
