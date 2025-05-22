@@ -28,6 +28,14 @@ export async function GET(request: NextRequest) {
     const ogTitle = $('meta[property="og:title"]').attr('content');
     const twitterTitle = $('meta[name="twitter:title"]').attr('content');
 
+    // titleが"Attention Required!"の場合はエラーを返す
+    if ((ogTitle || twitterTitle || title) === 'Attention Required!') {
+      return new Response(
+        JSON.stringify({ error: 'Failed to fetch meta title (bot protection or similar)' }),
+        { status: 500 }
+      );
+    }
+
     return new Response(
       JSON.stringify({
         title: ogTitle || twitterTitle || title,
@@ -43,4 +51,4 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     return new Response(JSON.stringify({ error: 'Failed to fetch meta title' }), { status: 500 });
   }
-} 
+}
