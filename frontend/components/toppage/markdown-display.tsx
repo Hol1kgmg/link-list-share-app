@@ -37,18 +37,20 @@ const SortableItem = ({ id, url, onDelete }: SortableItemProps) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-2 group relative pr-8"
+      className={`flex items-center gap-2 group relative pr-8 rounded-md transition-colors ${
+        isDragging ? 'bg-gray-100 dark:bg-gray-700' : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+      }`}
     >
-      <button
-        className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
+      <div
+        className="cursor-grab active:cursor-grabbing flex-1 flex items-center gap-2 py-2 px-2"
         {...attributes}
         {...listeners}
       >
-        <DragIcon />
-      </button>
-      <pre className="whitespace-pre-wrap break-all font-mono text-sm text-gray-700 dark:text-gray-300 flex-1">
-        {`[${url.title}](${url.url})`}
-      </pre>
+        <DragIcon className="flex-shrink-0" />
+        <pre className="whitespace-pre-wrap break-all font-mono text-sm text-gray-700 dark:text-gray-300 flex-1">
+          {`[${url.title}](${url.url})`}
+        </pre>
+      </div>
       <button
         onClick={() => onDelete(url.id)}
         className="absolute right-0 hover:bg-red-100 dark:hover:bg-red-900 rounded p-1.5 transition-colors duration-200"
@@ -102,7 +104,7 @@ const DeleteIcon = () => (
   </svg>
 );
 
-const DragIcon = () => (
+const DragIcon = ({ className = "" }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="16"
@@ -113,7 +115,7 @@ const DragIcon = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="text-gray-400"
+    className={`text-gray-400 ${className}`}
   >
     <circle cx="9" cy="5" r="1" />
     <circle cx="9" cy="12" r="1" />
