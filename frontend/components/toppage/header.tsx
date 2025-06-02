@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 export const Header = () => {
   return (
     <header className="flex flex-col items-center mb-12">
