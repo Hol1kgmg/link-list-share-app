@@ -37,10 +37,10 @@ const SortableItem = ({ id, url, onDelete }: SortableItemProps) => {
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-2 group relative pr-8 rounded-md transition-all duration-200 border-2 ${
+      className={`flex items-center gap-2 group relative pr-8 rounded-md transition-all duration-200 border ${
         isDragging 
-          ? 'bg-blue-100 dark:bg-blue-900 shadow-lg scale-105 border-blue-400 dark:border-blue-500' 
-          : 'border-transparent hover:bg-blue-50 dark:hover:bg-blue-950 hover:shadow-md hover:scale-[1.02] hover:border-blue-300 dark:hover:border-blue-700'
+          ? 'bg-gray-100 dark:bg-gray-700 shadow-md border-gray-300 dark:border-gray-600' 
+          : 'border-transparent hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-200 dark:hover:border-gray-700'
       }`}
     >
       <div
@@ -48,7 +48,7 @@ const SortableItem = ({ id, url, onDelete }: SortableItemProps) => {
         {...attributes}
         {...listeners}
       >
-        <DragIcon className="flex-shrink-0 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" />
+        <DragIcon className="flex-shrink-0 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors" />
         <pre className="whitespace-pre-wrap break-all font-mono text-sm text-gray-700 dark:text-gray-300 flex-1">
           {`[${url.title}](${url.url})`}
         </pre>
