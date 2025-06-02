@@ -73,3 +73,29 @@ Key patterns:
 - All features currently work without the Go backend running
 - No data persistence - refreshing the page clears all URLs
 - The app is designed for future backend integration for data storage
+
+## Git Branch Naming Convention
+
+Branch names should follow this format:
+
+`<type>/#<issue-number>_<description>`
+
+### Branch Types
+- `feat/` - New features
+- `fix/` - Bug fixes
+- `refactor/` - Code refactoring
+- `docs/` - Documentation updates
+- `test/` - Test additions or modifications
+- `chore/` - Build process or tooling changes
+
+### Examples
+- `feat/#6_sort_link-list` - Issue #6: Add link-list sorting functionality
+- `fix/#7_markdown_preview_title` - Issue #7: Fix markdown preview title display
+- `refactor/#10_optimize_api_calls` - Issue #10: Optimize API calls
+- `chore/#15_update_dependencies` - Issue #15: Update project dependencies
+
+### Guidelines
+- Use lowercase letters only
+- Separate words with hyphens (_)
+- Always include issue number when available
+- Keep descriptions concise and meaningful
