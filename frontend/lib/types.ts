@@ -13,6 +13,7 @@ export interface OutputUrlData {
 // コンポーネントのProps型
 export interface UrlListProps {
   urls: OutputUrlData[];  // 表示用のデータはOutputUrlData
+  setUrls: React.Dispatch<React.SetStateAction<OutputUrlData[]>>;
   onReset: () => void;
   onDelete: (id: string) => void;
 }

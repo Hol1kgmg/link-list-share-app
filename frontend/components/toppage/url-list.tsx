@@ -2,12 +2,47 @@ import { type OutputUrlData, type UrlListProps } from '@/lib/types';
 import { useState } from 'react';
 import { MarkdownDisplay } from './markdown-display';
 import { MarkdownPreview } from './markdown-preview';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import { restrictToListBounds } from '@/lib/dnd-modifiers';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 
-export const UrlList = ({ urls, onReset, onDelete }: UrlListProps) => {
+export const UrlList = ({ urls, setUrls, onReset, onDelete }: UrlListProps) => {
   const [copySuccess, setCopySuccess] = useState(false);
+  
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const formatUrlToMarkdown = (url: OutputUrlData) => {
     return `[${url.title}](${url.url})  `;
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      setUrls((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over?.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
   };
 
   const markdownText = urls.map(formatUrlToMarkdown).join('\n');
@@ -61,11 +96,23 @@ export const UrlList = ({ urls, onReset, onDelete }: UrlListProps) => {
         )}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <MarkdownDisplay
-          isEmpty={urls.length === 0}
-          urls={urls}
-          onDelete={onDelete}
-        />
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+          modifiers={[restrictToListBounds]}
+        >
+          <SortableContext
+            items={urls.map(url => url.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <MarkdownDisplay
+              isEmpty={urls.length === 0}
+              urls={urls}
+              onDelete={onDelete}
+            />
+          </SortableContext>
+        </DndContext>
         <MarkdownPreview
           markdownText={markdownText}
           isEmpty={urls.length === 0}

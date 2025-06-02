@@ -1,31 +1,85 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { type OutputUrlData } from '@/lib/types';
+
 interface MarkdownDisplayProps {
   isEmpty: boolean;
-  urls: { id: string; url: string }[];
+  urls: OutputUrlData[];
   onDelete: (id: string) => void;
 }
+
+interface SortableItemProps {
+  id: string;
+  url: OutputUrlData;
+  onDelete: (id: string) => void;
+}
+
+const SortableItem = ({ id, url, onDelete }: SortableItemProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform && {
+      ...transform,
+      x: 0, // X軸の移動を0に固定して横方向の動きを制限
+    }),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`flex items-center gap-2 group relative pr-8 rounded-md transition-all duration-200 border ${
+        isDragging 
+          ? 'bg-gray-100 dark:bg-gray-700 shadow-md border-gray-400 dark:border-gray-500' 
+          : 'border-transparent hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
+      }`}
+    >
+      <div
+        className="cursor-grab active:cursor-grabbing flex-1 flex items-center gap-2 py-2 px-2"
+        {...attributes}
+        {...listeners}
+      >
+        <DragIcon className="flex-shrink-0 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors" />
+        <pre className="whitespace-pre-wrap break-all font-mono text-sm text-gray-700 dark:text-gray-300 flex-1">
+          {`[${url.title}](${url.url})`}
+        </pre>
+      </div>
+      <button
+        onClick={() => onDelete(url.id)}
+        className="absolute right-0 hover:bg-red-100 dark:hover:bg-red-900 rounded p-1.5 transition-colors duration-200"
+        title="削除"
+      >
+        <DeleteIcon />
+      </button>
+    </div>
+  );
+};
 
 export const MarkdownDisplay = ({ isEmpty, urls, onDelete }: MarkdownDisplayProps) => {
   return (
     <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700">
       <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">マークダウン</h3>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto max-h-96 overflow-y-auto">
         {isEmpty ? (
           <p className="text-gray-500 dark:text-gray-400">登録されたURLはありません</p>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2 relative">
             {urls.map((url) => (
-              <div key={url.id} className="flex items-center gap-2 group relative pr-8">
-                <pre className="whitespace-pre-wrap break-all font-mono text-sm text-gray-700 dark:text-gray-300 flex-1">
-                  {`[${url.url}](${url.url})`}
-                </pre>
-                <button
-                  onClick={() => onDelete(url.id)}
-                  className="absolute right-0 hover:bg-red-100 dark:hover:bg-red-900 rounded p-1.5 transition-colors duration-200"
-                  title="削除"
-                >
-                  <DeleteIcon />
-                </button>
-              </div>
+              <SortableItem
+                key={url.id}
+                id={url.id}
+                url={url}
+                onDelete={onDelete}
+              />
             ))}
           </div>
         )}
@@ -49,5 +103,27 @@ const DeleteIcon = () => (
   >
     <path d="M18 6L6 18" />
     <path d="M6 6l12 12" />
+  </svg>
+);
+
+const DragIcon = ({ className = "" }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={`text-gray-400 ${className}`}
+  >
+    <circle cx="9" cy="5" r="1" />
+    <circle cx="9" cy="12" r="1" />
+    <circle cx="9" cy="19" r="1" />
+    <circle cx="15" cy="5" r="1" />
+    <circle cx="15" cy="12" r="1" />
+    <circle cx="15" cy="19" r="1" />
   </svg>
 ); 

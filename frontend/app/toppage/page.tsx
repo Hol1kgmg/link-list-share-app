@@ -47,6 +47,7 @@ export default function TopPage() {
           <UrlForm onSubmit={handleSubmit} />
           <UrlList
             urls={urls}
+            setUrls={setUrls}
             onReset={handleReset}
             onDelete={handleDelete}
           />
