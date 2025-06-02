@@ -39,8 +39,8 @@ const SortableItem = ({ id, url, onDelete }: SortableItemProps) => {
       style={style}
       className={`flex items-center gap-2 group relative pr-8 rounded-md transition-all duration-200 border ${
         isDragging 
-          ? 'bg-gray-100 dark:bg-gray-700 shadow-md border-gray-300 dark:border-gray-600' 
-          : 'border-transparent hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-200 dark:hover:border-gray-700'
+          ? 'bg-gray-100 dark:bg-gray-700 shadow-md border-gray-400 dark:border-gray-500' 
+          : 'border-transparent hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
       }`}
     >
       <div
