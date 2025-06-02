@@ -60,7 +60,7 @@ export const UrlForm = ({ onSubmit }: UrlFormProps) => {
     };
 
     fetchMeta();
-  }, [url, isGetRequest]);
+  }, [url, isGetRequest, onSubmit, refetch]);
 
   // 1秒以上ロードが続いた場合のみローディング表示
   useEffect(() => {
