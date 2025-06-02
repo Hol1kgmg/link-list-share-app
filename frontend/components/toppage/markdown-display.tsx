@@ -25,7 +25,10 @@ const SortableItem = ({ id, url, onDelete }: SortableItemProps) => {
   } = useSortable({ id });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Transform.toString(transform && {
+      ...transform,
+      x: 0, // X軸の移動を0に固定して横方向の動きを制限
+    }),
     transition,
     opacity: isDragging ? 0.5 : 1,
   };

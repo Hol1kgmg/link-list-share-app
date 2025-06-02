@@ -11,6 +11,7 @@ import {
   useSensors,
   DragEndEvent,
 } from '@dnd-kit/core';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import {
   arrayMove,
   SortableContext,
@@ -99,6 +100,7 @@ export const UrlList = ({ urls, setUrls, onReset, onDelete }: UrlListProps) => {
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
+          modifiers={[restrictToVerticalAxis]}
         >
           <SortableContext
             items={urls.map(url => url.id)}
