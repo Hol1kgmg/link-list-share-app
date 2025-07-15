@@ -112,3 +112,42 @@ Branch names should follow this format:
 - Separate words with hyphens (_)
 - Always include issue number when available
 - Keep descriptions concise and meaningful
+
+## Pull Request (PR) Guidelines
+
+### Issue Number Format in PR Descriptions
+When referencing issues in PR descriptions, use the following format:
+
+**Correct format**: `issue #<number> <description>`
+- ✅ `issue #12 の対応として、ITmediaなどの日本語サイトでメタタイトルが文字化けする問題を解決`
+- ✅ `issue #8 の対応として、アプリ名をLLShareに変更`
+
+**Incorrect format**: `issue#<number>` (missing space)
+- ❌ `issue#12の対応として...`
+- ❌ `issue#8の対応として...`
+
+### PR Description Template
+```markdown
+## Summary
+- issue #<number> の対応として、[問題の説明]
+- [実装した機能や変更の概要]
+
+## 実装内容
+- [変更点1]
+- [変更点2]
+- [変更点3]
+
+## テスト結果
+- ✅ [テストケース1]: [結果]
+- ✅ [テストケース2]: [結果]
+
+## Test plan
+- [ ] [テスト項目1]
+- [ ] [テスト項目2]
+```
+
+### Important Notes
+- Always include the issue number with a space after the hash symbol
+- Use Japanese for descriptions when appropriate
+- Include test results and test plans
+- Reference specific technical changes made
