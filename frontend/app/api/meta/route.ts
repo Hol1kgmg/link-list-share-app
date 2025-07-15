@@ -41,6 +41,49 @@ function detectEncoding(url: string, contentType: string | null): string {
   return 'utf-8';
 }
 
+// YouTube URL判定機能
+function isYouTubeUrl(url: string): boolean {
+  try {
+    const urlObj = new URL(url);
+    const domain = urlObj.hostname.toLowerCase();
+    
+    return [
+      'youtube.com',
+      'www.youtube.com',
+      'm.youtube.com',
+      'youtu.be',
+      'music.youtube.com'
+    ].includes(domain);
+  } catch {
+    return false;
+  }
+}
+
+// YouTube oEmbed API呼び出し機能
+async function fetchYouTubeTitle(url: string): Promise<string> {
+  try {
+    const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`;
+    
+    const response = await fetch(oembedUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; LLShare/1.0)',
+      },
+      signal: AbortSignal.timeout(5000)
+    });
+
+    if (!response.ok) {
+      throw new Error(`oEmbed API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.title || 'YouTube Video';
+
+  } catch (error) {
+    console.error('Error fetching YouTube title:', error);
+    return 'YouTube Video';
+  }
+}
+
 // HTMLテキストを適切なエンコーディングでデコード
 async function fetchAndDecodeHtml(url: string): Promise<string> {
   const response = await fetch(url, {
@@ -74,28 +117,38 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const html = await fetchAndDecodeHtml(urlParam);
+    let title: string;
 
-    if (!html) {
-      return new Response(JSON.stringify({ title: urlParam }), { status: 200 });
-    }
+    // YouTube URLの場合はoEmbed APIを使用
+    if (isYouTubeUrl(urlParam)) {
+      title = await fetchYouTubeTitle(urlParam);
+    } else {
+      // 通常のHTMLメタタイトル取得処理
+      const html = await fetchAndDecodeHtml(urlParam);
 
-    const $ = cheerio.load(html);
-    const title = $('title').text() || urlParam;
-    const ogTitle = $('meta[property="og:title"]').attr('content');
-    const twitterTitle = $('meta[name="twitter:title"]').attr('content');
+      if (!html) {
+        return new Response(JSON.stringify({ title: urlParam }), { status: 200 });
+      }
 
-    // titleが"Attention Required!"の場合はエラーを返す
-    if ((ogTitle || twitterTitle || title) === 'Attention Required!') {
-      return new Response(
-        JSON.stringify({ error: 'Failed to fetch meta title (bot protection or similar)' }),
-        { status: 500 }
-      );
+      const $ = cheerio.load(html);
+      const htmlTitle = $('title').text() || urlParam;
+      const ogTitle = $('meta[property="og:title"]').attr('content');
+      const twitterTitle = $('meta[name="twitter:title"]').attr('content');
+
+      // titleが"Attention Required!"の場合はエラーを返す
+      if ((ogTitle || twitterTitle || htmlTitle) === 'Attention Required!') {
+        return new Response(
+          JSON.stringify({ error: 'Failed to fetch meta title (bot protection or similar)' }),
+          { status: 500 }
+        );
+      }
+
+      title = ogTitle || twitterTitle || htmlTitle;
     }
 
     return new Response(
       JSON.stringify({
-        title: ogTitle || twitterTitle || title,
+        title,
         url: urlParam,
       }),
       { 
