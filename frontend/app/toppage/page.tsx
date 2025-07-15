@@ -36,7 +36,7 @@ export default function TopPage() {
             </h1>
           </div>
           <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-4">
-            Link List Share - URLマークダウン共有アプリ
+            LLShare(Link List Share) - URLマークダウン共有アプリ
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-center">
             URLを登録して、マークダウン形式で管理しましょう
