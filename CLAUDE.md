@@ -2,6 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Overview
+
+**LLShare (Link List Share)** - URLマークダウン共有アプリ
+
+LLShareは、URLを簡単に登録・管理し、マークダウン形式で共有できるWebアプリケーションです。
+
+### Key Features
+- URL自動メタデータ取得（title、og:title、twitter:title）
+- ドラッグ&ドロップによるリスト並び替え
+- マークダウン形式でのエクスポート機能
+- レスポンシブデザイン対応
+- リアルタイムプレビュー
+
 ## Development Commands
 
 ### Frontend (Next.js)
