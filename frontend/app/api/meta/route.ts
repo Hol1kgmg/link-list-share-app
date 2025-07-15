@@ -41,19 +41,66 @@ function detectEncoding(url: string, contentType: string | null): string {
   return 'utf-8';
 }
 
-// YouTube URL判定機能
-function isYouTubeUrl(url: string): boolean {
+// YouTube動画URL判定機能（動画以外を除外）
+function isYouTubeVideoUrl(url: string): boolean {
   try {
     const urlObj = new URL(url);
     const domain = urlObj.hostname.toLowerCase();
+    const pathname = urlObj.pathname;
+    const searchParams = urlObj.searchParams;
     
-    return [
+    // 対応するYouTubeドメインかチェック
+    const isYouTubeDomain = [
       'youtube.com',
       'www.youtube.com',
       'm.youtube.com',
       'youtu.be',
       'music.youtube.com'
     ].includes(domain);
+    
+    if (!isYouTubeDomain) {
+      return false;
+    }
+    
+    // youtu.beの場合（短縮URL）
+    if (domain === 'youtu.be') {
+      // パス形式: /VIDEO_ID または /VIDEO_ID?params
+      return pathname.length > 1 && !pathname.includes('/');
+    }
+    
+    // youtube.comの場合
+    if (domain.includes('youtube.com')) {
+      // /watch?v=VIDEO_ID 形式
+      if (pathname === '/watch' && searchParams.has('v')) {
+        return true;
+      }
+      
+      // /embed/VIDEO_ID 形式
+      if (pathname.startsWith('/embed/') && pathname.length > 7) {
+        return true;
+      }
+      
+      // /v/VIDEO_ID 形式
+      if (pathname.startsWith('/v/') && pathname.length > 3) {
+        return true;
+      }
+      
+      // 除外するパターン
+      const excludePatterns = [
+        '/results',        // 検索結果
+        '/channel/',       // チャンネル
+        '/c/',            // チャンネル（カスタムURL）
+        '/user/',         // ユーザー
+        '/playlist',      // プレイリスト
+        '/feed/',         // フィード
+        '/trending',      // トレンド
+        '/live/'          // ライブ
+      ];
+      
+      return !excludePatterns.some(pattern => pathname.startsWith(pattern));
+    }
+    
+    return false;
   } catch {
     return false;
   }
@@ -119,8 +166,8 @@ export async function GET(request: NextRequest) {
   try {
     let title: string;
 
-    // YouTube URLの場合はoEmbed APIを使用
-    if (isYouTubeUrl(urlParam)) {
+    // YouTube動画URLの場合はoEmbed APIを使用
+    if (isYouTubeVideoUrl(urlParam)) {
       title = await fetchYouTubeTitle(urlParam);
     } else {
       // 通常のHTMLメタタイトル取得処理
