@@ -9,11 +9,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 LLShareは、URLを簡単に登録・管理し、マークダウン形式で共有できるWebアプリケーションです。
 
 ### Key Features
-- URL自動メタデータ取得（title、og:title、twitter:title）
-- ドラッグ&ドロップによるリスト並び替え
-- マークダウン形式でのエクスポート機能
-- レスポンシブデザイン対応
-- リアルタイムプレビュー
+- **高度なメタデータ取得**：複数のエンコーディングと動画プラットフォームに対応
+  - 日本語サイト対応（Shift_JIS、UTF-8自動検出）
+  - YouTube oEmbed API統合（動的タイトル取得）
+  - 標準HTMLメタタグ（og:title、twitter:title、title）
+- **ドラッグ&ドロップ**：リスト並び替え機能
+- **マークダウンエクスポート**：構造化されたマークダウン形式
+- **レスポンシブデザイン**：デスクトップ・モバイル対応
+- **リアルタイムプレビュー**：即座にタイトル表示
 
 ## Development Commands
 
@@ -65,15 +68,36 @@ Key patterns:
 
 ### Data Flow
 1. User inputs URL → Frontend validates → Calls `/api/meta` 
-2. API route fetches HTML → Extracts title using Cheerio
-3. Frontend stores URL+title in React state
-4. User can export as Markdown or delete entries
+2. API route determines URL type:
+   - **YouTube URLs**: Uses oEmbed API for dynamic title fetching
+   - **Other URLs**: Fetches HTML with encoding detection
+3. Title extraction with appropriate method
+4. Frontend stores URL+title in React state
+5. User can export as Markdown or delete entries
 
-### Key Features Implementation
-- **Metadata extraction**: Checks og:title, twitter:title, then page title
-- **Bot protection handling**: Detects "Attention Required!" responses
-- **Delayed loading indicator**: Shows after 2 seconds to avoid UI flicker
-- **Edge caching**: 1-hour cache on metadata responses
+### Advanced Metadata Extraction System
+
+#### Multi-Platform Support
+- **YouTube Integration**: oEmbed API for accurate video titles
+  - Supports: youtube.com, youtu.be, m.youtube.com, music.youtube.com
+  - Handles: Standard URLs, short URLs, share parameters
+  - Fallback: "YouTube Video" for invalid/private videos
+- **Japanese Site Support**: Encoding detection for proper title display
+  - Auto-detects: Shift_JIS, UTF-8 from Content-Type headers
+  - Site-specific mapping: ITmedia, Nikkei, Sankei, Mainichi, Yomiuri, Asahi
+  - Fallback: UTF-8 decoding for unknown encodings
+
+#### Standard HTML Processing
+- **Priority order**: og:title → twitter:title → page title
+- **Bot protection**: Detects "Attention Required!" responses
+- **Error handling**: Graceful degradation with URL as fallback
+- **Performance**: 5-second timeout for all requests
+
+#### Technical Implementation
+- **Edge Runtime**: Next.js Edge Runtime for global performance
+- **Caching**: 1-hour cache with stale-while-revalidate
+- **TextDecoder**: Proper character encoding handling
+- **AbortSignal**: Request timeout management
 
 ## Environment Configuration
 - Frontend runs on `http://localhost:3000`
