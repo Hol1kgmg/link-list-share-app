@@ -68,7 +68,7 @@ export const MarkdownDisplay = ({ isEmpty, urls, onDelete }: MarkdownDisplayProp
   return (
     <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700">
       <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">マークダウン</h3>
-      <div className="overflow-x-auto max-h-96 overflow-y-auto">
+      <div className="overflow-x-auto">
         {isEmpty ? (
           <p className="text-gray-500 dark:text-gray-400">登録されたURLはありません</p>
         ) : (
